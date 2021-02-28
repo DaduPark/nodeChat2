@@ -60,16 +60,19 @@ io.sockets.on('connection', function(socket){
 		
 		
 	    chat_service.joinCheck(param).then(function (data) {
-	    	console.log(data.room_code)
-	    	console.log(data.message_list)
+	    	util.log('방번호 : '+data.room_code +'	'+__dirname)
+	    	//console.log(data.message_list)
 	    	
 	    	/*소켓에 이름, 방 저장해두기*/
 	    	socket.name= param.userId
 	    	socket.room= data.room_code;
 	    	
+	    	util.log('소켓아이디 : '+socket.id+'	'+__dirname);
+	    	
+	    	socket.emit('setMessageList', data);
+	    	
 	    	socket.join(data.room_code);
-	    })
-	    .catch(function (err) {
+	    }).catch(function (err) {
             console.log('joinERr',err);
             fn('fail');
         });

@@ -23,13 +23,10 @@ module.exports = {
 		joinCheck: function (param) {
 	        var selectRoomCode = new Promise(function (resolve, reject) {
 	        	
-	        	console.log('0');
-	        	//임의 룸코드 생성_테스트
+	        	//임의 룸코드 생성_테스트(상품아이디와 상대, 자신 아이디로 방이 있는지 확인하면될듯?)
 	        	if(param.room_code != '' && param.room_code!==undefined){
-	        		console.log('1');
 	        		resolve(param.room_code);
 	        	}else{
-	        		console.log('2');
 		        	var room_code = generateUUID();
 		        	resolve(room_code);
 	        	}
@@ -63,7 +60,7 @@ module.exports = {
 	                    
 	                
 	                	//이전메시지 가져오기 _테스트
-	                	resolve([{'name':'다두','text':'안녕하세요'},{'name':'나연','text':'네 안녕하세요'}]);
+	                	resolve([{'messageType':'me','text':'안녕하세요', 'time' : '2021.02.28 12:10:24'},{'messageType':'other','text':'네 안녕하세용', 'time' : '2021.02.28 12:12:24'}, {'messageType':'me','text':'반가워용', 'time' : '2021.02.28 13:10:24'}]);
 	                	
 	                	/*//해당 방의 모든 메시지 읽음 처리
 	                    dao.updateMessageReadFlag(room_code,param.me).then(function (read_meg_list) {
@@ -85,7 +82,6 @@ module.exports = {
 
 	                //최종 결과
 	                selectMessage.then(function(res){
-	                    console.log('message_list',res);
 	                    resolve({
 	                        room_code:room_code, //위 selectRoomCode에서 받아옴
 	                        message_list:res
