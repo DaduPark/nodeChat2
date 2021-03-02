@@ -9,6 +9,12 @@ function getParameterByName(name) {
 			" "));
 }
 
+/*서버 에러 발생시 처리*/
+function serverFail(point,errorMsg){
+	
+	console.log(point+'에서 에러발생 : '+errorMsg)
+}
+
 var paramRoomId = getParameterByName('roomId');
 var paramRoomUserId = getParameterByName('userId');
 
@@ -16,9 +22,14 @@ var paramRoomUserId = getParameterByName('userId');
 socket.on('connect', function() {
 
 	/* 서버에 새로운 유저가 왔다고 알림 */
-	socket.emit('newUser', {
+	socket.emit('join', {
 		userId : paramRoomUserId,
-		room_code : paramRoomId
+		roomId : paramRoomId
+	}, function(errorMsg){
+		//실패시 처리
+		if(errorMsg){
+			serverFail('join', errorMsg);
+		}
 	});
 
 })
@@ -35,7 +46,6 @@ socket.on('setMessageList', function(data) {
 		var className = ''
 	
 		// 타입에 따라 적용할 클래스를 다르게 지정
-		console.log('test--------'+messageData.messageType);
 		switch (messageData.messageType) {
 		case 'other':
 			className = 'other'
@@ -60,7 +70,7 @@ socket.on('update', function(data) {
 
 	var message = document.createElement('div')
 	var node = document
-			.createTextNode(`${data.name}: ${data.message} (${data.time})`)
+			.createTextNode(`${data.userId}: ${data.message} (${data.time})`)
 	var className = ''
 
 	// 타입에 따라 적용할 클래스를 다르게 지정
@@ -71,7 +81,7 @@ socket.on('update', function(data) {
 
 	case 'connect':
 		className = 'connect'
-		node = document.createTextNode(`${data.name}: ${data.message}`)
+		node = document.createTextNode(`${data.userId}: ${data.message}`)
 		break
 
 	case 'disconnect':
@@ -98,12 +108,20 @@ function send() {
 	var node = document.createTextNode(message)
 	msg.classList.add('me')
 	msg.appendChild(node)
-	chat.appendChild(msg)
+	
 
 	// 서버로 message 이벤트 전달 + 데이터와 함께
-	socket.emit('message', {
+	socket.emit('sendMessage', {
 		type : 'message',
 		message : message
+	}, function(errorMsg){
+		//실패시 처리
+		if(errorMsg=='fail'){
+			serverFail('sendMessage', errorMsg);
+		}else{
+			//성공시 자신이 보낸 메시지 표시
+			chat.appendChild(msg);
+		}
 	})
 }
 
@@ -111,6 +129,6 @@ function send() {
 function leave() {
 
 	// 서버로 message 이벤트 전달 + 데이터와 함께
-	socket.emit('roomLeave')
+	socket.emit('leaveRoom')
 	self.close();// 닫는 액션취하기(앱에 다른화면 연결등)
 }

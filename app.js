@@ -56,22 +56,22 @@ app.get('/chat', function(request, response){
 io.sockets.on('connection', function(socket){
 	
 	/*새로운 유저가 접속했을 경우 다른 소켓에게 알려줌*/
-	socket.on('newUser', function(param){
+	socket.on('join', function(param, fn){
 		
 		
 	    chat_service.joinCheck(param).then(function (data) {
-	    	util.log('방번호 : '+data.room_code +'	'+__dirname)
+	    	util.log('방번호 : '+data.roomId +'	'+__dirname)
 	    	//console.log(data.message_list)
 	    	
 	    	/*소켓에 이름, 방 저장해두기*/
-	    	socket.name= param.userId
-	    	socket.room= data.room_code;
+	    	socket.userId= param.userId
+	    	socket.roomId= data.roomId;
 	    	
 	    	util.log('소켓아이디 : '+socket.id+'	'+__dirname);
 	    	
 	    	socket.emit('setMessageList', data);
 	    	
-	    	socket.join(data.room_code);
+	    	socket.join(data.roomId);
 	    }).catch(function (err) {
             console.log('joinERr',err);
             fn('fail');
@@ -82,32 +82,52 @@ io.sockets.on('connection', function(socket){
 	})
 	
 	
-	socket.on('message', function(data){
+	socket.on('sendMessage', function(data, fn){
 		/*받은 데이터에 누가 보냈는지 이름을 추가*/
-		data.name=socket.name
-		data.time = moment().format("h:ss A")
-		console.log(data)
+		data.userId=socket.userId;
+		data.time = moment().format();
+		data.roomId=socket.roomId;
+		
+		console.log(data);
 		
 		/*보낸 사람을 제외한 나머지 유저에게 메시지 전송*/
-		
-		socket.broadcast.to(socket.room).emit('update', data)
+		chat_service.insertMessage(data).then(function (messageNum) {
+			socket.broadcast.to(socket.roomId).emit('update', data);
+			fn(messageNum);
+		 }).catch(function (err) {
+	            console.log('send_message ERR',err);
+	            fn('fail');
+	     });
 	})
 	
-	socket.on('roomLeave', function(){
-		console.log(socket.name + '님이 나가셨습니다.(나가기버튼)')
+	socket.on('leaveRoom', function(){
+		console.log(socket.userId + '님이 나가셨습니다.(나가기버튼)')
+		
 		/*보낸 사람을 제외한 나머지 유저에게 메시지 전송*/
+		data.userId=socket.userId;
+		data.time = moment().format();
+		data.roomId=socket.roomId;
+		chat_service.leaveRoom(data).then(function (messageNum) {
+            
+			fn('success');
+            socket.leave(socket.roomId);
+            
+        }).catch(function (err) {
+            console.log('leave_room ERR',err);
+            fn('fail');
+        });
 		
-		socket.broadcast.to(socket.room).emit('update', {type:'disconnect', name:'SERVER', message:socket.name+'님이 나가셨습니다.'})
+		//socket.broadcast.to(socket.roomId).emit('update', {type:'disconnect', userId:'SERVER', message:socket.userId+'님이 나가셨습니다.'})
 		
-		socket.leave(socket.room);
+		
 	})
 	
 	socket.on('disconnect', function(){
 		
 		console.log('그냥 창닫음')
-		socket.leave(socket.room)
+		socket.leave(socket.roomId)
 		/*나가는 사람을 제외한 나머지 유저에게 메시지 전송*/
-		//socket.broadcast.to(socket.room).emit('update', {type:'disconnect', name:'SERVER', message:socket.name+'님이 나가셨습니다.'})
+		//socket.broadcast.to(socket.roomId).emit('update', {type:'disconnect', name:'SERVER', message:socket.name+'님이 나가셨습니다.'})
 	})
 })
 
