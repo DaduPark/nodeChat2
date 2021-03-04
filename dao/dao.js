@@ -1,4 +1,5 @@
 var Promise = require("bluebird");
+
 //var mysql = require('mysql');
 //var credential = require('../private/credentials').mysql.production;
 
@@ -19,7 +20,7 @@ module.exports = {
 		//메시지 입력
 	    insertMessage : function (roomId,userId,message,time) {
 	        return new Promise(function (resolve, reject) {
-	        	
+	        	console.log(process.env.DB_NAME+"--------환경변수 테스트");
 	        	//테스트로 임의의 숫자 발생하게 만듦(메시지 고유 번호 대체)
 	        	 resolve(Math.floor(Math.random() * 100));
 	           /* db.getConnection(function(err, connection) {

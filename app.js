@@ -36,12 +36,16 @@ const httpServer= server.listen(8090, function(req,res){
 /*생성된 서버를 socket.io에 바인딩*/
 const io = socket(server).listen(httpServer, {log:false, origins:'*:*'});
 
+/*환경설정*/
+require("dotenv").config({ path: process.env.NODE_ENV == "prd" ? ".env" : ".env.dev"})
+
 app.use('/css', express.static('./static/css')) 
 app.use('/js', express.static('./static/js'))
 
 /*get 방식으로 / 경로에 접속하면 실행됨*/
 app.get('/chat', function(request, response){
 	fs.readFile('./static/index.html', function(err, data){
+		
 		if(err){
 			response.send('에러')
 		}else{
