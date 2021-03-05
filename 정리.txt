@@ -1,0 +1,87 @@
+지도 
+http://www.gurubee.net/article/78897
+
+인스턴스
+https://gmlwjd9405.github.io/2018/09/17/class-object-instance.html
+클래스변수
+https://itmining.tistory.com/20
+
+웹소켓
+1.https://m.blog.naver.com/scw0531/221052774287
+2.https://shj7242.github.io/2018/01/23/Spring37/
+
+handshake 방식
+https://sleepyeyes.tistory.com/4
+
+채팅 node.js
+https://geundung.dev/62?category=719250
+
+채팅 node-spring
+https://alpreah.tistory.com/92
+-----------------------------------------------
+node.js
+https://geundung.dev/62?category=719250
+
+2.https://www.slideshare.net/ssuserf64d04/nodeexpress
+
+3.module.exports 
+
+다른파일에서 사용할 모듈 변수 생성
+https://www.zerocho.com/category/NodeJS/post/5835b500373b5b0018a81a10
+ex)
+function divide(a, b) {
+  return a / b;
+}
+
+module.exports = {
+  add: add,
+  substract: substract,
+  multiply: multiply,
+  divide: divide,
+};
+
+
+4.room
+
+https://gipyeonglee.tistory.com/99
+
+5. bluebirde_promise 패턴<=콜백중첩(콜백지옥) 극복
+https://programmingsummaries.tistory.com/325
+5.1자바스크립트 비동기 처리와 콜백 함수
+https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/
+5.2promise
+https://joshua1988.github.io/web-development/javascript/promise-for-beginners/#promise%EA%B0%80-%EB%AD%94%EA%B0%80%EC%9A%94
+
+화살표 함수
+
+개발 상용 환경변수관리
+
+.env dotenv
+https://devhyun.com/blog/post/23
+https://www.daleseo.com/js-dotenv/
+
+
+er_truncated_wrong_value_for_field_ 한글 에러 
+ALTER TABLE (테이블명) convert to charset utf8;
+출처: https://mitny.tistory.com/208 [MitNy]
+
+moment milleseconds
+HH:mm:ss.SSS
+https://momentjs.com/docs/
+
+dao mysql 설정
+https://nesoy.github.io/articles/2017-04/Nodejs-MySQL
+
+
+
+connnection 끊김문제 
+ connection.release();
+  이 커넥션은 pool로 돌아가 다른 주체가 사용 할 수 있도록 준비합니다.
+  http://blog.securekim.com/2013/11/nodejs-mysql.html
+  
+  
+-첫 메시지 생성시에만 방생성
+1. 먼저 첫 join때 방존재여부 확인 후 개수 socket.messageCkeck에 담기
+
+2. 메시지 보낼때 messageCkeck가 0이면 방생성
+메시지 보내고 socket.messageCkeck은 항상 1로 두기

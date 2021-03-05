@@ -64,14 +64,21 @@ io.sockets.on('connection', function(socket){
 		
 		
 	    chat_service.joinCheck(param).then(function (data) {
-	    	util.log('방번호 : '+data.roomId +'	'+__dirname)
+	    	util.log('방번호 : '+param.roomId +'	'+__dirname)
 	    	//console.log(data.message_list)
 	    	
 	    	/*소켓에 이름, 방 저장해두기*/
-	    	socket.userId= param.userId
-	    	socket.roomId= data.roomId;
+	    	socket.userId= param.userId;
+	    	socket.roomId= param.roomId;
+	    	socket.otherId= param.otherId;
+	    	socket.userType= param.userType;
+	    	socket.buyDate= param.buyDate;
+	    	socket.check= param.buyDate;
+	    	socket.messageExistCheck=data.messageExistCheck;
 	    	
-	    	util.log('소켓아이디 : '+socket.id+'	'+__dirname);
+	    	util.log('메시지존재확인 1 : '+socket.messageExistCheck+'	'+__dirname);
+	    	
+	    	//util.log('소켓아이디 : '+socket.id+'	'+__dirname);
 	    	
 	    	socket.emit('setMessageList', data);
 	    	
@@ -89,15 +96,23 @@ io.sockets.on('connection', function(socket){
 	socket.on('sendMessage', function(data, fn){
 		/*받은 데이터에 누가 보냈는지 이름을 추가*/
 		data.userId=socket.userId;
-		data.time = moment().format();
+		data.otherId=socket.otherId;
+		data.time = moment().format("YYYYMMDDHHmmssSSS");
 		data.roomId=socket.roomId;
+		data.messageExistCheck=socket.messageExistCheck;
+		data.userType=socket.userType;
 		
 		console.log(data);
 		
 		/*보낸 사람을 제외한 나머지 유저에게 메시지 전송*/
 		chat_service.insertMessage(data).then(function (messageNum) {
 			socket.broadcast.to(socket.roomId).emit('update', data);
+			console.log(messageNum+"return test");
 			fn(messageNum);
+			
+			//메시지 전송후 항상 1로 두어 메시지가 있을때 방이 생성되지않게 설정
+			socket.messageExistCheck=1;
+			
 		 }).catch(function (err) {
 	            console.log('send_message ERR',err);
 	            fn('fail');
