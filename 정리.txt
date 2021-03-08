@@ -85,3 +85,8 @@ connnection 끊김문제
 
 2. 메시지 보낼때 messageCkeck가 0이면 방생성
 메시지 보내고 socket.messageCkeck은 항상 1로 두기
+
+
+
+2명 체크
+- 먼저 방있는지 체크후에 방이 있을 시 아이디체크를 시행하여 확인
