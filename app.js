@@ -72,17 +72,32 @@ io.sockets.on('connection', function(socket){
 	    	socket.roomId= param.roomId;
 	    	socket.otherId= param.otherId;
 	    	socket.userType= param.userType;
-	    	socket.buyDate= param.buyDate;
-	    	socket.check= param.buyDate;
-	    	socket.messageExistCheck=data.messageExistCheck;
+	    	socket.soldDate= param.soldDate;
 	    	
-	    	util.log('메시지존재확인 1 : '+socket.messageExistCheck+'	'+__dirname);
+	    	console.log('구입일 테스트'+data.soldDate);
+	    	//기존 방 존재 시 soldDate는  DB값을 불러오며 메시지존재유무는 1로 설정
+	    	if(data.soldDate=='0'){
+	    		socket.messageExistFlag='0';//기존 메시지 존재 유무 설정(방이 존재하지 않으면 메시지도 존재하지 않음)
+	    		socket.soldDate=param.soldDate;
+	    	}else{
+	    		socket.messageExistFlag='1';
+	    		socket.soldDate=data.soldDate;
+	    	}
+	    	console.log('구입일 테스트(데이터) : '+socket.soldDate);
+	    	
+	    	util.log('메시지존재확인 1 : '+socket.messageExistFlag+'	'+__dirname);
 	    	
 	    	//util.log('소켓아이디 : '+socket.id+'	'+__dirname);
 	    	
 	    	socket.emit('setMessageList', data);
 	    	
+	    	fn(socket.soldDate);
+	    	
 	    	socket.join(data.roomId);
+	    	
+	    	//가장 최근에 본 메시지 update 
+	    	chat_service.updateViewMessage(param);
+	    	
 	    }).catch(function (err) {
             console.log('joinERr',err);
             fn('fail');
@@ -99,19 +114,22 @@ io.sockets.on('connection', function(socket){
 		data.otherId=socket.otherId;
 		data.time = moment().format("YYYYMMDDHHmmssSSS");
 		data.roomId=socket.roomId;
-		data.messageExistCheck=socket.messageExistCheck;
+		data.messageExistFlag=socket.messageExistFlag;
 		data.userType=socket.userType;
+		data.soldDate=socket.soldDate;
 		
 		console.log(data);
 		
 		/*보낸 사람을 제외한 나머지 유저에게 메시지 전송*/
 		chat_service.insertMessage(data).then(function (messageNum) {
-			socket.broadcast.to(socket.roomId).emit('update', data);
-			console.log(messageNum+"return test");
-			fn(messageNum);
 			
+			//2명 동시에 메시지를 발송한 경우 time을 변경하였으므로 return 받은 시간을 다시 삽입 
+			data.time = messageNum;
+			
+			socket.broadcast.to(socket.roomId).emit('update', data);
+			fn(messageNum);
 			//메시지 전송후 항상 1로 두어 메시지가 있을때 방이 생성되지않게 설정
-			socket.messageExistCheck=1;
+			socket.messageExistFlag=1;
 			
 		 }).catch(function (err) {
 	            console.log('send_message ERR',err);
@@ -119,29 +137,15 @@ io.sockets.on('connection', function(socket){
 	     });
 	})
 	
-	socket.on('leaveRoom', function(){
-		console.log(socket.userId + '님이 나가셨습니다.(나가기버튼)')
-		
-		/*보낸 사람을 제외한 나머지 유저에게 메시지 전송*/
-		data.userId=socket.userId;
-		data.time = moment().format();
-		data.roomId=socket.roomId;
-		chat_service.leaveRoom(data).then(function (messageNum) {
-            
-			fn('success');
-            socket.leave(socket.roomId);
-            
-        }).catch(function (err) {
-            console.log('leave_room ERR',err);
-            fn('fail');
-        });
-		
-		//socket.broadcast.to(socket.roomId).emit('update', {type:'disconnect', userId:'SERVER', message:socket.userId+'님이 나가셨습니다.'})
-		
-		
-	})
+
 	
 	socket.on('disconnect', function(){
+		
+		//가장 최근에 본 메시지 update 
+    	chat_service.updateViewMessage({
+    		userId : socket.userId,
+    		roomId : socket.roomId
+    	});
 		
 		console.log('그냥 창닫음')
 		socket.leave(socket.roomId)

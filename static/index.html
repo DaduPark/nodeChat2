@@ -5,6 +5,7 @@
     <title>채팅</title>
     <link rel="stylesheet" href="/css/index.css">
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/lib/jquery-2.2.4.min.js" type="text/javascript"></script> 
     <script src="/js/index.js"></script>
   </head>
   <body>
@@ -14,9 +15,14 @@
       </div>
       <div>
         <input type="text" id="test" placeholder="메시지를 입력해주세요..">
-        <button onclick="send()">전송</button>
+        <button onclick="send()" id="messageSend" >전송</button>
          <button onclick="leave()">나가기</button>
+         <button onclick="compareDate()">시간</button>
       </div>
+      
+      <input type="hidden" id="soldDate" name="soldDate">
     </div>
   </body>
 </html>
+
+

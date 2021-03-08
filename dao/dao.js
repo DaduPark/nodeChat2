@@ -30,17 +30,17 @@ module.exports = {
 	        			 connection.release();
 		        		 connection.query('INSERT INTO gppl_chatmessage (MESSAGE_NUM,ROOM_NUM,USER_ID,MESSAGE_TEXT) VALUES(?,?,?,?);',[param.time,param.roomId,param.userId,param.message], function(err, rows) {
 		                    if(err){
-		                    	//두사용자가 같은 시간에 채팅을 하여 milliseconds까지 겹칠경우 밀리세컨즈+1하여 한번더 insert 시도
-		                    	connection.query('INSERT INTO gppl_chatmessage (MESSAGE_NUM,ROOM_NUM,USER_ID,MESSAGE_TEXT) VALUES(?,?,?,?);',[parseInt(param.time)+1,param.roomId,param.userId,param.message], function(err, rows) {
+		                    	//두 사용자가 같은 시간에 채팅을 하여 milliseconds까지 겹칠경우 밀리세컨즈+1하여 한번더 insert 시도
+		                    	connection.query('INSERT INTO gppl_chatmessage (MESSAGE_NUM,ROOM_NUM,USER_ID,MESSAGE_TEXT) VALUES(?,?,?,?);',[(BigInt(param.time)+BigInt(1)),param.roomId,param.userId,param.message], function(err, rows) {
 		                    		if(err){
 				                        reject(err);
 		                    		}else{
-		                    			resolve(true);
+		                    			resolve((BingInt(param.time)+BingInt(1)));
 		                    		}
 		                    	});
 		                        
 		                    } else {
-		                    	resolve(true);
+		                    	resolve(param.time);
 		                    }
 		                });
                      }
@@ -62,7 +62,7 @@ module.exports = {
 	                         reject(err);
 		        		 }else {
 		        			 connection.release();
-			        		 connection.query('INSERT INTO gppl_chatroom (ROOM_NUM,USER_TYPE,USER_ID) VALUES(?,?,?);',[param.roomId,'1',buyerId], function(err, rows) {
+			        		 connection.query('INSERT INTO gppl_chatroom (ROOM_NUM,USER_TYPE,USER_ID,SOLD_DATE) VALUES(?,?,?,?);',[param.roomId,'1',buyerId,param.soldDate], function(err, rows) {
 			                    if(err){
 			                    	reject(err);
 			                    } else {
@@ -81,7 +81,7 @@ module.exports = {
 	                         reject(err);
 		        		 }else {
 		        			 connection.release();
-			        		 connection.query('INSERT INTO gppl_chatroom (ROOM_NUM,USER_TYPE,USER_ID) VALUES(?,?,?);',[param.roomId,'2',sellerId], function(err, rows) {
+			        		 connection.query('INSERT INTO gppl_chatroom (ROOM_NUM,USER_TYPE,USER_ID,SOLD_DATE) VALUES(?,?,?,?);',[param.roomId,'2',sellerId,param.soldDate], function(err, rows) {
 			                    if(err){
 			                    	reject(err);
 			                    } else {
@@ -104,29 +104,9 @@ module.exports = {
 	            });
 	    	});
 	    }, 
-	  //방 나가기
-	    deleteRoom : function (room_code,id) {
-	        return new Promise(function (resolve, reject) {
-	            db.getConnection(function(err, connection) {
-	                /*connection.query( "DELETE FROM group_chat WHERE room = ? AND id = ?", [room_code,id],function(err, rows) {
-	                    connection.release();
-	                    if(err){
-	                        reject(err);
-	                    } else {
-	                        resolve(true);
-	                    }
-	                });
-
-	                if(err){
-	                    connection.release();
-	                    reject(err);
-	                }*/
-	            });
-	        });
-	    },
 	    
-	  //메시지가 있는지 확인(첫 메시지 발송시 방 생성 & 구매 확정보류 클릭시 메시지 유무 확인용)_ 방 개수 확인(메시지 생성시 방이 생기므로 방생성유무==메시지존재유무)
-	    selectMessageExistCheck : function (roomId) {
+	  //구매일과 방존재유무 체크(기존 대화방없을시 0을 리턴하고 있을 시 상품구매일 반환)
+	    selectSoldDateAndExistCheck : function (param) {
 	        return new Promise(function (resolve, reject) {
 	            db.getConnection(function(err, connection) {
 	            	
@@ -135,12 +115,12 @@ module.exports = {
 	                    reject(err);
 	                }
 	            	
-	                connection.query( "SELECT COUNT(*) as roomCount FROM gppl_chatroom WHERE room_num=?", [roomId],function(err, result) {
+	                connection.query( "SELECT case when COUNT(*)=0 then 0 ELSE sold_date END as soldDate FROM gppl_chatroom WHERE room_num=? AND USER_id=?", [param.roomId, param.userId],function(err, result) {
 	                    connection.release();
 	                    if(err){
 	                        reject(err);
 	                    } else {
-	                        resolve(result[0].roomCount);
+	                        resolve(result[0].soldDate);
 	                    }
 	                });
 
@@ -164,6 +144,29 @@ module.exports = {
 	                        reject(err);
 	                    } else {
 	                    	console.log(rows);
+	                        resolve(rows);
+	                    }
+	                });
+
+	                
+	            });
+	        });
+	    },
+	  //가장 최근에 본 메시지 update(해당 방의 가장큰 메시지번호를 저장함)
+	    updateViewMessage : function (param) {
+	        return new Promise(function (resolve, reject) {
+	            db.getConnection(function(err, connection) {
+	            	
+	            	if(err){
+	                    connection.release();
+	                    reject(err);
+	                }
+	            	
+	                connection.query( "UPDATE gppl_chatroom SET VIEW_MESSAGE_NUM=(SELECT MAX(MESSAGE_NUM) FROM test.gppl_chatmessage) WHERE room_num=?  AND user_id=?", [param.roomId, param.userId],function(err, rows) {
+	                    connection.release();
+	                    if(err){
+	                        reject(err);
+	                    } else {
 	                        resolve(rows);
 	                    }
 	                });
