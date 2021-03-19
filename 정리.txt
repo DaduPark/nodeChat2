@@ -120,3 +120,9 @@ https://velog.io/@ash/Node.js-%EC%84%9C%EB%B2%84%EC%97%90-logging-%EB%9D%BC%EC%9
 https://altkeycode.tistory.com/19
 메시지 복호화시 한글
 convert(AES_DECRYpt(message, shar2('key', 512))using utf8
+hex- 깨짐방지
+http://blog.naver.com/PostView.nhn?blogId=sensate1024&logNo=220789750654&parentCategoryNo=&categoryNo=75&viewDate=&isShowPopularPosts=true&from=search
+
+
+메시지 입력창이 아닐때는 포커스 아웃시키기
+https://studiou.tistory.com/6
