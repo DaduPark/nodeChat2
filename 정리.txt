@@ -126,3 +126,26 @@ http://blog.naver.com/PostView.nhn?blogId=sensate1024&logNo=220789750654&parentC
 
 메시지 입력창이 아닐때는 포커스 아웃시키기
 https://studiou.tistory.com/6
+
+
+PM2활용 무중단 서비스
+https://engineering.linecorp.com/ko/blog/pm2-nodejs/
+
+
+redis - 다중서버
+http://egloos.zum.com/metashower/v/9893770
+https://mudchobo.tistory.com/539
+
+
+https://medium.com/@rlatla626/aws-elasticbeanstalk-node-js-socket-io-redis%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%B1%84%ED%8C%85%EC%84%9C%EB%B2%84-1-36d1dd5be62c
+
+
+AWS  무료
+https://smujihoon.tistory.com/85
+
+ec2 - rdb 연동
+https://rile1036.tistory.com/81
+https://twofootdog.tistory.com/41
+스키마생성
+create database `GPNH` CHARACTER SET utf8 COLLATE utf8_general_ci;
+
