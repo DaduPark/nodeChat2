@@ -59,6 +59,9 @@ https://joshua1988.github.io/web-development/javascript/promise-for-beginners/#p
 .env dotenv
 https://devhyun.com/blog/post/23
 https://www.daleseo.com/js-dotenv/
+윈도우 / set NODE_ENV=test
+리눅스 / export NODE_ENV=test
+
 
 
 er_truncated_wrong_value_for_field_ 한글 에러 
@@ -146,6 +149,65 @@ https://smujihoon.tistory.com/85
 ec2 - rdb 연동
 https://rile1036.tistory.com/81
 https://twofootdog.tistory.com/41
+
+mysql -u uranus -p --host nhdbt.cr9rswshdano.ap-northeast-2.rds.amazonaws.com
+
 스키마생성
 create database `GPNH` CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+winscp 접속
+https://velog.io/@banjjoknim/WinSCP%EC%99%80-PuTTY%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4%EC%84%9C-AWS-EC2-%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4Ubuntu-AMI%EC%97%90-%EC%A0%91%EC%86%8D%ED%95%98%EA%B8%B0
+
+aws  ip 연결
+https://ppost.tistory.com/entry/AWS-%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4-%EC%83%9D%EC%84%B1-%ED%9B%84-%EC%A3%BC%EC%9D%98%ED%95%A0%EA%B2%83
+
+
+
+stream_1.pipeline is not a function 오류   ==> node 버전 낮아서임
+https://socket.io/docs/v3/migrating-from-2-x-to-3-0/
+
+ip 확인
+curl ip.ojj.kr
+
+
+env user 값이 uranus로 설정했는데 aws의 node에서는 ubuntu 로 나옴 (EC2의 아이디값으로 가져옴)
+process.env.USER->process.env.DBUSER 로 변경!
+
+
+리눅스의 mysql, mariaDB는 대소문자구분
+AWS의 RDS의 파라미터편집부분에서 lower파라미터 1->0으로 수정
+기본으로있는 default파라미터그룹은 수정이 안되므로 파라미터그룹하나 생성하여 해당 RDB에 적용
+
+
+putty 종료해도 계속 유지 _ screen=> pm2 사용하니 안꺼지고 유지되서 사용안함
+https://kbs4674.tistory.com/28
+
+80으로 접속하고싶을때 (iptable로 80일때 8090으로)
+https://comcube.tistory.com/entry/Nodejs-80-%ED%8F%AC%ED%8A%B8%EB%A1%9C-iptable-%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%EC%97%B0%EA%B2%B0%ED%95%98%EA%B8%B0
+
+
+pm2(프로세서 매니저)
+https://jybaek.tistory.com/716
+
+pm2이용하여 부트 스트랩로 등록
+https://jybaek.tistory.com/721
+
+pm2 로그관리_pm2-logrotate
+https://hellvelopment.tistory.com/41
+
+pm2 로그관리_pm2-logrotate (설정값들)
+https://darrengwon.tistory.com/1120
+
+
+
+이모티콘 오류  (두번째 링크의 db pool 파일 커넥션으로 변경하고 db에 저장되있는 값을 USING utf8mb4 로 바꾸어 나타낸다
+첫번째 링크는 안해도됨 _ 이유 : 이모트콘을 바로 저장하는것이아니고 암호화하여 넣기때문에
+)
+https://artiiicy.tistory.com/31
+https://artiiicy.tistory.com/32
+
+
+
+자식요소 삭제(클라이언트가 끊겼다가 다시 붙을때 대화가 이중으로 생기는부분 방지_restart시)
+https://itskeleton.tistory.com/entry/JQuery-%EC%9A%94%EC%86%8C-%EC%82%AD%EC%A0%9C%ED%95%98%EA%B8%B0
+$().empty();
