@@ -19,6 +19,59 @@ https://geundung.dev/62?category=719250
 채팅 node-spring
 https://alpreah.tistory.com/92
 -----------------------------------------------
+강의 
+
+apckage-lock.json - > 모듈이 충돌됐을때 로딩 시켜줌 ?
+
+node_modelueles > r관련된 라이브러리들이 한번에 깔려 많이 깔린것
+
+package의 dependcy 에 나와있기 때문에 
+깃에서 받을때 node_modelueles을 다 받을필요 없고 npm i 를 실행시키면 해당 모듐들이 설치됨.
+
+npm 설치전 npmjs사이트를 보고 모듈 보고 다운받기 -> 다운로드수 보고 안정화 된것 설치하는게 좋음-> 모듈에서 에러나면 나중에 힘들어짐
+
+koa npm 은 express의 핵심 기술만 가지고있음 -> 추후에 각광받을가능성
+
+public => css등
+
+view ejs같은 템플릿
+
+작업팁: 랩프로젝트 위치에 넣기? 
+
+app
+
+post값 받는법 => req.body 
+get값 받기(URL값)=> req.query
+
+
+connectionlimit = > 사용 커넥션개수
+
+async(동기)-> 써야 then 사용가능
+disporser-> 다끝난후 실행하게될것 release()- > 커넥션을 쉬게함(다른사용하기전에 대기)
+
+end -> 프로세스 끝날때 커넥션끊기
+
+처음 constructor 실행
+
+클래스는 new를 해야 constructor 이 실행됨
+
+then은 catch가있어서 error를 안줌
+
+all-> 안에 있는 여러개는 병렬로 진행되서 실행되고
+then에는 여러개가 array 형태로 넘겨짐
+
+트렌젝션 보장-> err 시에 rollback 시키고 then 일때commit;
+
+connetnecting 끊어지는 중 
+
+pinginterval 클라이언트가 서버가 살아있나 아닌가 확인
+pringtimeout 연결했을대 기다리는 시간 
+
+object.keys(socket.rooms)=> 방아이디값들이 array 넘어옴
+
+
+
+---------------------------------------------------------------------------------
 node.js
 https://geundung.dev/62?category=719250
 
@@ -211,3 +264,26 @@ https://artiiicy.tistory.com/32
 자식요소 삭제(클라이언트가 끊겼다가 다시 붙을때 대화가 이중으로 생기는부분 방지_restart시)
 https://itskeleton.tistory.com/entry/JQuery-%EC%9A%94%EC%86%8C-%EC%82%AD%EC%A0%9C%ED%95%98%EA%B8%B0
 $().empty();
+
+
+redis
+https://library.gabia.com/contents/infrahosting/8018/
+soket-redis npm설치하면 ejs, dotenv등 npm 다시설치해야하는 에러?
+
+
+ec2 redis설치
+https://alsyean.tistory.com/51
+https://medium.com/@dlaudtjr07/redis-redis-%EA%B0%9C%EB%85%90-aws-ec2%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-a510cdb9731e
+
+우분투 chkconfig 에러 대체
+https://hyess.tistory.com/255
+
+우분투 netstat/ifconfig: command not found
+https://proni.tistory.com/entry/%E2%9C%85-Solved-Ubuntu-bash-netstat-command-not-found
+
+
+부하테스트 artillery
+3.36.80.217/chattest?marketBoxNo=2888&&userId=liRHDSxMa2Xbde8Ryd391mH%2b4W%2bgUE4muhsVkIvfSUU%3d&&buyerId=kYrtEvkXt79%2fpy1aigDJ4TMUSi91p4l%2bEQL4xDxbHmQ%3d&&sellerId=liRHDSxMa2Xbde8Ryd391mH%2b4W%2bgUE4muhsVkIvfSUU%3d&&soldDate=20210318
+https://artillery.io/blog/load-testing-socketio-with-artillery
+
+
